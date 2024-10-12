@@ -1,0 +1,77 @@
+
+app:     file format elf32-littlearm
+
+
+Disassembly of section .kernel.text:
+
+00080000 <__start_kernel>:
+   80000:	e10f0000 	mrs	r0, CPSR
+   80004:	e3c0001f 	bic	r0, r0, #31
+   80008:	e3800013 	orr	r0, r0, #19
+   8000c:	e38000c0 	orr	r0, r0, #192	@ 0xc0
+   80010:	e129f000 	msr	CPSR_fc, r0
+   80014:	e59f0048 	ldr	r0, [pc, #72]	@ 80064 <__start_kernel+0x64>
+   80018:	e59f1048 	ldr	r1, [pc, #72]	@ 80068 <__start_kernel+0x68>
+   8001c:	e5801000 	str	r1, [r0]
+   80020:	e59f0044 	ldr	r0, [pc, #68]	@ 8006c <__start_kernel+0x6c>
+   80024:	e3a01000 	mov	r1, #0
+   80028:	e5801000 	str	r1, [r0]
+   8002c:	e59f003c 	ldr	r0, [pc, #60]	@ 80070 <__start_kernel+0x70>
+   80030:	e5901000 	ldr	r1, [r0]
+   80034:	e3811080 	orr	r1, r1, #128	@ 0x80
+   80038:	e5801000 	str	r1, [r0]
+   8003c:	e59f0030 	ldr	r0, [pc, #48]	@ 80074 <__start_kernel+0x74>
+   80040:	e5901000 	ldr	r1, [r0]
+   80044:	e3811080 	orr	r1, r1, #128	@ 0x80
+   80048:	e5801000 	str	r1, [r0]
+   8004c:	e59f0024 	ldr	r0, [pc, #36]	@ 80078 <__start_kernel+0x78>
+   80050:	e5901000 	ldr	r1, [r0]
+   80054:	e3811080 	orr	r1, r1, #128	@ 0x80
+   80058:	e5801000 	str	r1, [r0]
+   8005c:	e59fd018 	ldr	sp, [pc, #24]	@ 8007c <__start_kernel+0x7c>
+   80060:	ea000006 	b	80080 <kernel_start>
+   80064:	f8000008 			@ <UNDEFINED> instruction: 0xf8000008
+   80068:	0000df0d 	andeq	sp, r0, sp, lsl #30
+   8006c:	f800071c 			@ <UNDEFINED> instruction: 0xf800071c
+   80070:	e000a204 	and	sl, r0, r4, lsl #4
+   80074:	e000a208 	and	sl, r0, r8, lsl #4
+   80078:	e000a040 	and	sl, r0, r0, asr #32
+   8007c:	00090088 	andeq	r0, r9, r8, lsl #1
+
+00080080 <kernel_start>:
+   80080:	b480      	push	{r7}
+   80082:	af00      	add	r7, sp, #0
+   80084:	bf00      	nop
+   80086:	e7fd      	b.n	80084 <kernel_start+0x4>
+
+Disassembly of section .ARM.attributes:
+
+00000000 <.ARM.attributes>:
+   0:	00002e41 	andeq	r2, r0, r1, asr #28
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	00000024 	andeq	r0, r0, r4, lsr #32
+  10:	412d3705 			@ <UNDEFINED> instruction: 0x412d3705
+  14:	070a0600 	streq	r0, [sl, -r0, lsl #12]
+  18:	09010841 	stmdbeq	r1, {r0, r6, fp}
+  1c:	12040a02 	andne	r0, r4, #8192	@ 0x2000
+  20:	15011404 	strne	r1, [r1, #-1028]	@ 0xfffffbfc
+  24:	18031701 	stmdane	r3, {r0, r8, r9, sl, ip}
+  28:	1c021a01 			@ <UNDEFINED> instruction: 0x1c021a01
+  2c:	Address 0x2c is out of bounds.
+
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347 	bcc	10d0d24 <__stack_start+0x1040c9c>
+   4:	62552820 	subsvs	r2, r5, #32, 16	@ 0x200000
+   8:	75746e75 	ldrbvc	r6, [r4, #-3701]!	@ 0xfffff18b
+   c:	2e333120 	rsfcssp	f3, f3, f0
+  10:	2d302e32 	ldccs	14, cr2, [r0, #-200]!	@ 0xffffff38
+  14:	62753332 	rsbsvs	r3, r5, #-939524096	@ 0xc8000000
+  18:	75746e75 	ldrbvc	r6, [r4, #-3701]!	@ 0xfffff18b
+  1c:	31202934 			@ <UNDEFINED> instruction: 0x31202934
+  20:	2e322e33 	mrccs	14, 1, r2, cr2, cr3, {1}
+  24:	Address 0x24 is out of bounds.
+
