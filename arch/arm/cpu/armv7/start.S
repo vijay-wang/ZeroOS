@@ -1,9 +1,9 @@
-.section .kernel.text
-.extern kernel_start
-.code 32
-.global _start
+        .section .start.text
+        .extern kernel_start
+        .code 32
+        .global reset
 
-_start:
+reset:
 
         /* disable interrupts, also set the cpu to SVC32 mode */
         mrs r0, cpsr
@@ -42,8 +42,3 @@ _start:
 
         ldr sp, =__stack_start
         b kernel_start
-
-/* Missing .note.GNU-stack section implies executable stack, which
- *is not safe. Empty .note.GNU-stack to enable non-executable stack
- */
-.section .note.GNU-stack,"",%progbits
