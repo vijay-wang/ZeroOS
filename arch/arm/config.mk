@@ -1,2 +1,2 @@
-LDFLAGS_zero += -fpie
+LDFLAGS_studinix += -fpie
 ALL-y += checkarmreloc
