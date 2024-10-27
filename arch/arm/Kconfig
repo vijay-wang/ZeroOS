@@ -1,0 +1,61 @@
+menu "ARM architecture"
+	depends on ARM
+
+config SYS_ARCH
+	default "arm"
+
+config ARM64
+	bool
+
+config HAS_VBAR
+        bool
+
+config HAS_THUMB2
+        bool
+
+config CPU_ARM720T
+        bool
+
+config CPU_ARM920T
+        bool
+
+config CPU_ARM926EJS
+        bool
+
+config CPU_ARM946ES
+        bool
+
+config CPU_ARM1136
+        bool
+
+config CPU_ARM1176
+        bool
+        select HAS_VBAR
+
+config CPU_V7
+        bool
+        select HAS_VBAR
+        select HAS_THUMB2
+
+config CPU_V7M
+	bool
+        select HAS_THUMB2
+
+config CPU_PXA
+        bool
+
+config CPU_SA1100
+        bool
+
+config SYS_CPU
+        default "arm720t" if CPU_ARM720T
+        default "arm920t" if CPU_ARM920T
+        default "arm926ejs" if CPU_ARM926EJS
+        default "arm946es" if CPU_ARM946ES
+        default "arm1136" if CPU_ARM1136
+        default "arm1176" if CPU_ARM1176
+        default "armv7" if CPU_V7
+        default "armv7m" if CPU_V7M
+        default "pxa" if CPU_PXA
+        default "sa1100" if CPU_SA1100
+	default "armv8" if ARM64
