@@ -672,7 +672,8 @@ libs-y += $(if $(BOARDDIR),board/$(BOARDDIR)/)
 
 libs-y := $(sort $(libs-y))
 
-studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y))) tools examples
+#studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y))) tools examples
+studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y))) examples
 
 studinix-alldirs	:= $(sort $(studinix-dirs) $(patsubst %/,%,$(filter %/, $(libs-))))
 
