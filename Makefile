@@ -731,7 +731,7 @@ DO_STATIC_RELA =
 endif
 
 # Always append ALL so that arch config.mk's can add custom ones
-ALL-y += studinix.srec studinix.bin studinix.sym System.map studinix.cfg binary_size_check
+#ALL-y += studinix.srec studinix.bin studinix.sym System.map studinix.cfg binary_size_check
 
 ALL-$(CONFIG_ONENAND_STUDINIX) += studinix-onenand.bin
 ifeq ($(CONFIG_SPL_FSL_PBL),y)
