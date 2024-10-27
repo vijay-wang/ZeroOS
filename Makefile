@@ -620,60 +620,60 @@ c_flags := $(KBUILD_CFLAGS) $(cpp_flags)
 
 HAVE_VENDOR_COMMON_LIB = $(if $(wildcard $(srctree)/board/$(VENDOR)/common/Makefile),y,n)
 
-libs-y += lib/
-libs-$(HAVE_VENDOR_COMMON_LIB) += board/$(VENDOR)/common/
-libs-$(CONFIG_OF_EMBED) += dts/
-libs-y += fs/
-libs-y += net/
-libs-y += disk/
-libs-y += drivers/
-libs-y += drivers/dma/
-libs-y += drivers/gpio/
-libs-y += drivers/i2c/
-libs-y += drivers/mmc/
-libs-y += drivers/mtd/
-libs-$(CONFIG_CMD_NAND) += drivers/mtd/nand/
-libs-y += drivers/mtd/onenand/
-libs-$(CONFIG_CMD_UBI) += drivers/mtd/ubi/
-libs-y += drivers/mtd/spi/
-libs-y += drivers/net/
-libs-y += drivers/net/phy/
-libs-y += drivers/pci/
-libs-y += drivers/power/ \
-	drivers/power/fuel_gauge/ \
-	drivers/power/mfd/ \
-	drivers/power/pmic/ \
-	drivers/power/battery/ \
-	drivers/power/regulator/
-libs-y += drivers/spi/
-libs-$(CONFIG_FMAN_ENET) += drivers/net/fm/
-libs-$(CONFIG_SYS_FSL_DDR) += drivers/ddr/fsl/
-libs-$(CONFIG_ALTERA_SDRAM) += drivers/ddr/altera/
-libs-y += drivers/serial/
-libs-y += drivers/usb/dwc3/
-libs-y += drivers/usb/emul/
-libs-y += drivers/usb/eth/
-libs-y += drivers/usb/gadget/
-libs-y += drivers/usb/gadget/udc/
-libs-y += drivers/usb/host/
-libs-y += drivers/usb/musb/
-libs-y += drivers/usb/musb-new/
-libs-y += drivers/usb/phy/
-libs-y += drivers/usb/ulpi/
-libs-y += cmd/
-libs-y += common/
-libs-$(CONFIG_API) += api/
-libs-$(CONFIG_HAS_POST) += post/
-libs-y += test/
-libs-y += test/dm/
-libs-$(CONFIG_UT_ENV) += test/env/
+# libs-y += lib/
+# libs-$(HAVE_VENDOR_COMMON_LIB) += board/$(VENDOR)/common/
+# libs-$(CONFIG_OF_EMBED) += dts/
+# libs-y += fs/
+# libs-y += net/
+# libs-y += disk/
+# libs-y += drivers/
+# libs-y += drivers/dma/
+# libs-y += drivers/gpio/
+# libs-y += drivers/i2c/
+# libs-y += drivers/mmc/
+# libs-y += drivers/mtd/
+# libs-$(CONFIG_CMD_NAND) += drivers/mtd/nand/
+# libs-y += drivers/mtd/onenand/
+# libs-$(CONFIG_CMD_UBI) += drivers/mtd/ubi/
+# libs-y += drivers/mtd/spi/
+# libs-y += drivers/net/
+# libs-y += drivers/net/phy/
+# libs-y += drivers/pci/
+# libs-y += drivers/power/ \
+# 	drivers/power/fuel_gauge/ \
+# 	drivers/power/mfd/ \
+# 	drivers/power/pmic/ \
+# 	drivers/power/battery/ \
+# 	drivers/power/regulator/
+# libs-y += drivers/spi/
+# libs-$(CONFIG_FMAN_ENET) += drivers/net/fm/
+# libs-$(CONFIG_SYS_FSL_DDR) += drivers/ddr/fsl/
+# libs-$(CONFIG_ALTERA_SDRAM) += drivers/ddr/altera/
+# libs-y += drivers/serial/
+# libs-y += drivers/usb/dwc3/
+# libs-y += drivers/usb/emul/
+# libs-y += drivers/usb/eth/
+# libs-y += drivers/usb/gadget/
+# libs-y += drivers/usb/gadget/udc/
+# libs-y += drivers/usb/host/
+# libs-y += drivers/usb/musb/
+# libs-y += drivers/usb/musb-new/
+# libs-y += drivers/usb/phy/
+# libs-y += drivers/usb/ulpi/
+# libs-y += cmd/
+# libs-y += common/
+# libs-$(CONFIG_API) += api/
+# libs-$(CONFIG_HAS_POST) += post/
+# libs-y += test/
+# libs-y += test/dm/
+# libs-$(CONFIG_UT_ENV) += test/env/
 
 libs-y += $(if $(BOARDDIR),board/$(BOARDDIR)/)
 
 libs-y := $(sort $(libs-y))
 
 #studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y))) tools examples
-studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y))) examples
+studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y)))
 
 studinix-alldirs	:= $(sort $(studinix-dirs) $(patsubst %/,%,$(filter %/, $(libs-))))
 
