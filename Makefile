@@ -1477,7 +1477,6 @@ cmd_cpp_lds = $(CPP) -Wp,-MD,$(depfile) $(cpp_flags) $(LDPPFLAGS) -ansi \
 		-D__ASSEMBLY__ -x assembler-with-cpp -P -o $@ $<
 
 studinix.lds: $(LDSCRIPT) prepare FORCE
-	echo ++++++++++++++LDSCRIPT:$(LDSCRIPT)+++++++++++++++++++
 	$(call if_changed_dep,cpp_lds)
 
 spl/studinix-spl.bin: spl/studinix-spl
