@@ -1,4 +1,6 @@
 choice
+	prompt "Architecture select"
+	default SANDBOX
 
 config ARM
 	bool "ARM architecture"
@@ -7,7 +9,6 @@ config ARM
 	select HAVE_GENERIC_BOARD
 	select SYS_GENERIC_BOARD
 	select SUPPORT_OF_CONTROL
-endchoice
 
 config X86
 	bool "x86 architecture"
@@ -21,5 +22,19 @@ config X86
 	select DM_GPIO
 	select DM_SPI
 	select DM_SPI_FLASH
+
+config SANDBOX
+	bool "Sandbox"
+	select HAVE_GENERIC_BOARD
+	select SYS_GENERIC_BOARD
+	select SUPPORT_OF_CONTROL
+	select DM
+	select DM_SPI_FLASH
+	select DM_SERIAL
+	select DM_I2C
+	select DM_SPI
+	select DM_GPIO
+
+endchoice
 
 source "arch/arm/Kconfig"
