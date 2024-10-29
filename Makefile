@@ -118,7 +118,7 @@ CHECK		= sparse
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void -D__CHECK_ENDIAN__ $(CF)
 
-KBUILD_CPPFLAGS := -D__KERNEL__ -D__UBOOT__
+KBUILD_CPPFLAGS := -D__KERNEL__ -D__STUDINIX__
 
 KBUILD_CFLAGS   := -Wall -Wstrict-prototypes \
 		   -Wno-format-security \
@@ -136,7 +136,7 @@ export CPP AR NM LDR STRIP OBJCOPY OBJDUMP
 export MAKE AWK PERL PYTHON
 export HOSTCXX HOSTCXXFLAGS DTC CHECK CHECKFLAGS
 
-export KBUILD_CPPFLAGS NOSTDINC_FLAGS UBOOTINCLUDE OBJCOPYFLAGS LDFLAGS
+export KBUILD_CPPFLAGS NOSTDINC_FLAGS STUDINIXINCLUDE OBJCOPYFLAGS LDFLAGS
 export KBUILD_CFLAGS KBUILD_AFLAGS
 
 export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
@@ -183,32 +183,14 @@ PHONY += $(studinix-dirs)
 $(studinix-dirs): prepare scripts
 	$(Q)$(MAKE) $(build)=$@
 
-# Store (new) UBOOTRELEASE string in include/config/studinix.release
-include/config/studinix.release: include/config/auto.conf FORCE
-	$(call filechk,studinix.release)
-
 # Listed in dependency order
-PHONY += prepare archprepare prepare0 prepare1 prepare2 prepare3
-
-# prepare3 is used to check if we are building in a separate output directory,
-# and if so do:
-# 1) Check that make has not been executed in the kernel src $(srctree)
-prepare3: include/config/studinix.release
-
-ifneq ($(KBUILD_SRC),)
-	@$(kecho) '  Using $(srctree) as source for Studinix'
-	$(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
-		echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
-		echo >&2 "  in the '$(srctree)' directory.";\
-		/bin/false; \
-	fi;
-endif
+PHONY += prepare archprepare prepare0 prepare1 prepare2
 
 # prepare2 creates a makefile if using a separate output directory
-prepare2: prepare3 outputmakefile
+prepare2: outputmakefile
 
-prepare1: prepare2 $(version_h) $(timestamp_h) \
-                   include/config/auto.conf
+prepare1: prepare2 $(version_h) $(timestamp_h)
+                   
 #ifeq ($(CONFIG_HAVE_GENERIC_BOARD),)
 #ifeq ($(CONFIG_SYS_GENERIC_BOARD),y)
 #	@echo >&2 "  Your architecture does not support generic board."
