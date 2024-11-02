@@ -41,63 +41,50 @@ _fiq:			.word fiq
 
 	.align  5
 undefined_instruction:
-	get_bad_stack
-	bad_save_user_regs
-	bl	do_undefined_instruction
+        b       .
 
 	.align	5
 software_interrupt:
-	get_bad_stack
-	bad_save_user_regs
-	bl	do_software_interrupt
+        b       .
 
 	.align	5
+
 prefetch_abort:
-	get_bad_stack
-	bad_save_user_regs
-	bl	do_prefetch_abort
+        b       .
 
 	.align	5
 data_abort:
-	get_bad_stack
-	bad_save_user_regs
-	bl	do_data_abort
+        b       .
 
 	.align	5
 not_used:
-	get_bad_stack
-	bad_save_user_regs
-	bl	do_not_used
+        b       .
 
 	.align	5
 
 #ifdef CONFIG_USE_IRQ
 irq:
-	get_irq_stack
-	irq_save_user_regs
-	bl	do_irq
-	irq_restore_user_regs
+        b       .
 
 	.align	5
 fiq:
-	get_fiq_stack
-	/* someone ought to write a more effiction fiq_save_user_regs */
-	irq_save_user_regs
-	bl	do_fiq
-	irq_restore_user_regs
+        b       .
+
 
 #else
 
 	.align	5
 irq:
-	get_bad_stack
-	bad_save_user_regs
-	bl	do_irq
+        b       .
+
+
+
 
 	.align	5
 fiq:
-	get_bad_stack
-	bad_save_user_regs
-	bl	do_fiq
+        b       .
+
+
+
 
 #endif /* CONFIG_USE_IRQ */
