@@ -146,6 +146,7 @@ export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
 			 --exclude CVS --exclude .pc --exclude .hg --exclude .git
 
 -include arch/$(ARCH)/config.mk
+-include arch/$(ARCH)/Makefile
 
 # Basic helpers built in scripts/
 PHONY += scripts_basic
@@ -170,12 +171,14 @@ all: $(ALL-y)
 	$(LD) start.o init.o -Tarch/arm/kernel/zero.lds -o app
 	$(STRIP)  app
 
+quiet_cmd_studinix__ ?= LD      $@
+      cmd_studinix__ ?= $(LD) $(LDFLAGS) $(LDFLAGS_studinix) -o $@ \
+      -T studinix.lds $(studinix-init)                             \
+      --start-group $(studinix-main) --end-group                 \
+      $(PLATFORM_LIBS) -Map studinix.map
+
 studinix: $(studinix-init) $(studinix-main) studinix.lds FORCE
 	$(call if_changed,studinix__)
-ifeq ($(CONFIG_KALLSYMS),y)
-	$(call cmd,smap)
-	$(call cmd,studinix__) common/system_map.o
-endif
 
 $(sort $(studinix-init) $(studinix-main)): $(studinix-dirs) ;
 
@@ -226,9 +229,11 @@ quiet_cmd_cpp_lds = LDS     $@
 cmd_cpp_lds = $(CPP) -Wp,-MD,$(depfile) $(cpp_flags) $(LDPPFLAGS) -ansi \
 		-D__ASSEMBLY__ -x assembler-with-cpp -P -o $@ $<
 
+LDSCRIPT := $(srctree)/arch/$(ARCH)/cpu/studinix.lds
 studinix.lds: $(LDSCRIPT) prepare FORCE
 	$(call if_changed_dep,cpp_lds)
 
+PHONY += $(LDSCRIPT)
 
 PHONY += outputmakefile
 outputmakefile:
