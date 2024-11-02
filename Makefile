@@ -4,7 +4,6 @@ SUBLEVEL =
 EXTRAVERSION =
 NAME =
 
-
 ARCH := arm
 CROSS_COMPILE	?= arm-linux-gnueabihf-
 
@@ -67,8 +66,11 @@ ifeq ($(HOSTARCH),$(ARCH))
 CROSS_COMPILE ?=
 endif
 
+ifeq ($(dot-config), 1)
 KCONFIG_CONFIG	?= .config
+-include $(KCONFIG_CONFIG)
 export KCONFIG_CONFIG
+endif
 
 # SHELL used by kbuild
 CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
@@ -125,9 +127,20 @@ KBUILD_CFLAGS   := -Wall -Wstrict-prototypes \
 		   -fno-builtin -ffreestanding
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 
+STUDINIXINCLUDE    := \
+		-Iinclude
+
+cpp_flags := $(KBUILD_CPPFLAGS) $(PLATFORM_CPPFLAGS) $(STUDINIXINCLUDE) \
+							$(NOSTDINC_FLAGS)
+c_flags := $(KBUILD_CFLAGS) $(cpp_flags)
+
+
 # Read STUDINIXRELEASE from include/config/studinix.release (if it exists)
 STUDINIXRELEASE = $(shell cat include/config/studinix.release 2> /dev/null)
 STUDINIXVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
+
+CPU ?= $(subst ",,$(CONFIG_SYS_CPU))
+#CPU ?= $(CONFIG_SYS_CPU)
 
 export VERSION PATCHLEVEL SUBLEVEL STUDINIXRELEASE STUDINIXVERSION
 export ARCH CPU BOARD VENDOR SOC CPUDIR BOARDDIR
@@ -156,7 +169,7 @@ scripts_basic:
 head-y +=
 libs-y +=
 
-studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y))) tools examples
+studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y)))
 
 studinix-init := $(head-y)
 studinix-main := $(libs-y)
@@ -184,6 +197,7 @@ $(sort $(studinix-init) $(studinix-main)): $(studinix-dirs) ;
 
 PHONY += $(studinix-dirs)
 $(studinix-dirs): prepare scripts
+	echo ===========dirs=$(studinix-dirs)==========
 	$(Q)$(MAKE) $(build)=$@
 
 # Listed in dependency order

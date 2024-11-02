@@ -2,7 +2,7 @@ mainmenu "Studinix $STUDINIXVERSION Configuration"
 
 config STUDINIXVERSION
 	string
-	option env="UBOOTVERSION"
+	option env="STUDINIXVERSION"
 
 source "arch/Kconfig"
 
