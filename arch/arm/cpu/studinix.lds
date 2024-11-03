@@ -4,7 +4,7 @@ SECTIONS
         . = 0x80000;
         __start_kernel = .;
         .text ALIGN(4) : {
-                *.(.__image_copy_start)
+                *(.__image_copy_start)
                 *(.vectors)
                 CPUDIR/start.o (.start.text)
                 *(.text*)

@@ -35,6 +35,8 @@ ifndef KBUILD_CHECKSRC
   KBUILD_CHECKSRC = 0
 endif
 
+export KBUILD_CHECKSRC
+
 PHONY := _all
 _all:
 $(CURDIR)/Makefile Makefile: ;
