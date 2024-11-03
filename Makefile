@@ -217,12 +217,7 @@ export PLATFORM_LIBGCC
 ALL-y +=
 
 all: $(ALL-y)
-	echo =====================mycmd=======================
-	#-rm start.o app
-	#$(CC) -Wall -c arch/arm/boot/start.S -o start.o
-	#$(CC) -Wall -c arch/arm/boot/init.c -o init.o
-	#$(LD) start.o init.o -Tarch/arm/kernel/zero.lds -o app
-	#$(STRIP)  app
+	$(Q)echo =====================finished=======================
 
 quiet_cmd_studinix__ ?= LD      $@
       cmd_studinix__ ?= $(LD) $(LDFLAGS) $(LDFLAGS_studinix) -o $@ \
