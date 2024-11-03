@@ -199,7 +199,8 @@ scripts_basic:
 head-y +=
 libs-y +=
 
-studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y)))
+studinix-dirs	  := $(patsubst %/,%,$(filter %/, $(libs-y)))
+studinix-alldirs  := $(sort $(studinix-dirs) $(patsubst %/,%,$(filter %/, $(libs-))))
 
 libs-y := $(sort $(libs-y))
 libs-y		:= $(patsubst %/, %/built-in.o, $(libs-y))
@@ -299,6 +300,31 @@ ifneq ($(KBUILD_SRC),)
 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile \
 	    $(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
 endif
+
+# clean - Delete most, but leave enough to build external modules
+#
+quiet_cmd_rmdirs = $(if $(wildcard $(rm-dirs)),CLEAN   $(wildcard $(rm-dirs)))
+      cmd_rmdirs = rm -rf $(rm-dirs)
+
+quiet_cmd_rmfiles = $(if $(wildcard $(rm-files)),CLEAN   $(wildcard $(rm-files)))
+      cmd_rmfiles = rm -f $(rm-files)
+
+clean: rm-dirs  := $(CLEAN_DIRS)
+clean: rm-files := $(CLEAN_FILES)
+
+clean-dirs	:= $(foreach f,$(studinix-alldirs),$(if $(wildcard $(srctree)/$f/Makefile),$f))
+
+clean-dirs      := $(addprefix _clean_, $(clean-dirs))
+
+$(clean-dirs):
+	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
+
+# TODO: Do not use *.cfgtmp
+clean: $(clean-dirs)
+	$(call cmd,rmdirs)
+	$(call cmd,rmfiles)
+
+PHONY += $(clean-dirs) clean archclean
 
 PHONY += FORCE
 FORCE:
