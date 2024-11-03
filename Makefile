@@ -323,6 +323,7 @@ MRPROPER_FILES += .config .config.old include/autoconf.mk* include/config.h \
 
 # clean - Delete most, but leave enough to build external modules
 #
+CLEAN_FILES += studinix*
 clean: rm-dirs  := $(CLEAN_DIRS)
 clean: rm-files := $(CLEAN_FILES)
 
