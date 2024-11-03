@@ -156,6 +156,9 @@ KBUILD_AFLAGS   := -D__ASSEMBLY__
 STUDINIXINCLUDE    := \
 		-Iinclude
 
+NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+CHECKFLAGS     += $(NOSTDINC_FLAGS)
+
 cpp_flags := $(KBUILD_CPPFLAGS) $(PLATFORM_CPPFLAGS) $(STUDINIXINCLUDE) \
 							$(NOSTDINC_FLAGS)
 c_flags := $(KBUILD_CFLAGS) $(cpp_flags)
