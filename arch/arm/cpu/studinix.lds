@@ -1,5 +1,5 @@
 ENTRY(_start)
-SECTIONS
+        SECTIONS
 {
         . = 0x80000;
         __start_kernel = .;
@@ -8,29 +8,29 @@ SECTIONS
                 *(.vectors)
                 CPUDIR/start.o (.start.text)
                 *(.text*)
-        
+
         }
-        
-	.rodata ALIGN(8) : { *(.rodata) }
 
-	.data ALIGN(8) : { *(.data) }
+        .rodata ALIGN(8) : { *(.rodata) }
 
-	__bss_start = .;
-	.bss ALIGN(8) :
-	{
-		*(.bss)
-		*(COMMON)
-	}
-	__bss_end = .;
+        .data ALIGN(8) : { *(.data) }
+
+        __bss_start = .;
+        .bss ALIGN(8) :
+        {
+                *(.bss)
+                *(COMMON)
+        }
+        __bss_end = .;
 
         __end_kernel = .;
         __stack_size = 0x10000;  /* 64KB */
         PROVIDE(__stack_start = __end_kernel + __stack_size);
-	
-	/DISCARD/ : {
-		*(.note.GNU-stack)	
-		*(.comment)	
-		*(.ARM.attributes)
-	}
+
+        /DISCARD/ : {
+                *(.note.GNU-stack)	
+                *(.comment)	
+                *(.ARM.attributes)
+        }
 
 } 

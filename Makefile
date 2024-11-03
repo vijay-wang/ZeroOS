@@ -184,8 +184,9 @@ export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
 export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
 			 --exclude CVS --exclude .pc --exclude .hg --exclude .git
 
--include arch/$(ARCH)/config.mk
--include arch/$(ARCH)/Makefile
+include config.mk
+include arch/$(ARCH)/config.mk
+include arch/$(ARCH)/Makefile
 
 # Basic helpers built in scripts/
 PHONY += scripts_basic
@@ -197,8 +198,21 @@ libs-y +=
 
 studinix-dirs	:= $(patsubst %/,%,$(filter %/, $(libs-y)))
 
+libs-y := $(sort $(libs-y))
+libs-y		:= $(patsubst %/, %/built-in.o, $(libs-y))
+
 studinix-init := $(head-y)
 studinix-main := $(libs-y)
+
+# Add GCC lib
+ifeq ($(CONFIG_USE_PRIVATE_LIBGCC),y)
+PLATFORM_LIBGCC = arch/$(ARCH)/lib/lib.a
+else
+PLATFORM_LIBGCC := -L $(shell dirname `$(CC) $(c_flags) -print-libgcc-file-name`) -lgcc
+endif
+PLATFORM_LIBS += $(PLATFORM_LIBGCC)
+export PLATFORM_LIBS
+export PLATFORM_LIBGCC
 
 ALL-y +=
 
@@ -263,6 +277,12 @@ checkarmreloc: studinix
 		echo "$< contains unexpected relocations: $$RELOC"; \
 		false; \
 	fi
+
+LDPPFLAGS += \
+	-include $(srctree)/include/studinix/studinix.lds.h \
+	-DCPUDIR=$(CPUDIR) \
+	$(shell $(LD) --version | \
+	  sed -ne 's/GNU ld version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/-DLD_MAJOR=\1 -DLD_MINOR=\2/p')
 
 quiet_cmd_cpp_lds = LDS     $@
 cmd_cpp_lds = $(CPP) -Wp,-MD,$(depfile) $(cpp_flags) $(LDPPFLAGS) -ansi \
