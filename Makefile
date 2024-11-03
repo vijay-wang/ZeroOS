@@ -168,9 +168,6 @@ c_flags := $(KBUILD_CFLAGS) $(cpp_flags)
 STUDINIXRELEASE = $(shell cat include/config/studinix.release 2> /dev/null)
 STUDINIXVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
 
-CPU ?= $(subst ",,$(CONFIG_SYS_CPU))
-#CPU ?= $(CONFIG_SYS_CPU)
-
 export VERSION PATCHLEVEL SUBLEVEL STUDINIXRELEASE STUDINIXVERSION
 export ARCH CPU BOARD VENDOR SOC CPUDIR BOARDDIR
 export CONFIG_SHELL HOSTCC HOSTCFLAGS HOSTLDFLAGS CROSS_COMPILE AS LD CC
@@ -301,14 +298,31 @@ ifneq ($(KBUILD_SRC),)
 	    $(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
 endif
 
+#########################################################################
+
+###
+# Cleaning is done on three levels.
+# make clean     Delete most generated files
+#                Leave enough to build external modules
+# make mrproper  Delete the current configuration, and all generated files
+# make distclean Remove editor backup files, patch leftover files and the like
+
+# Directories & files removed with 'make clean'
+CLEAN_DIRS  += $(MODVERDIR) \
+	       $(foreach d, spl tpl, $(patsubst %,$d/%, \
+			$(filter-out include, $(shell ls -1 $d 2>/dev/null))))
+
+CLEAN_FILES += include/bmp_logo.h include/bmp_logo_data.h \
+	       boot* u-boot* MLO* SPL System.map
+
+# Directories & files removed with 'make mrproper'
+MRPROPER_DIRS  += include/config include/generated spl tpl \
+		  .tmp_objdiff
+MRPROPER_FILES += .config .config.old include/autoconf.mk* include/config.h \
+		  ctags etags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
+
 # clean - Delete most, but leave enough to build external modules
 #
-quiet_cmd_rmdirs = $(if $(wildcard $(rm-dirs)),CLEAN   $(wildcard $(rm-dirs)))
-      cmd_rmdirs = rm -rf $(rm-dirs)
-
-quiet_cmd_rmfiles = $(if $(wildcard $(rm-files)),CLEAN   $(wildcard $(rm-files)))
-      cmd_rmfiles = rm -f $(rm-files)
-
 clean: rm-dirs  := $(CLEAN_DIRS)
 clean: rm-files := $(CLEAN_FILES)
 
@@ -316,6 +330,7 @@ clean-dirs	:= $(foreach f,$(studinix-alldirs),$(if $(wildcard $(srctree)/$f/Make
 
 clean-dirs      := $(addprefix _clean_, $(clean-dirs))
 
+PHONY += $(clean-dirs) clean archclean
 $(clean-dirs):
 	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
 
@@ -323,8 +338,49 @@ $(clean-dirs):
 clean: $(clean-dirs)
 	$(call cmd,rmdirs)
 	$(call cmd,rmfiles)
+	@find $(if $(KBUILD_EXTMOD), $(KBUILD_EXTMOD), .) $(RCS_FIND_IGNORE) \
+		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
+		-o -name '*.ko.*' -o -name '*.su' -o -name '*.cfgtmp' \
+		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
+		-o -name '*.symtypes' -o -name 'modules.order' \
+		-o -name modules.builtin -o -name '.tmp_*.o.*' \
+		-o -name '*.gcno' \) -type f -print | xargs rm -f
 
-PHONY += $(clean-dirs) clean archclean
+# mrproper - Delete all generated files, including .config
+#
+mrproper: rm-dirs  := $(wildcard $(MRPROPER_DIRS))
+mrproper: rm-files := $(wildcard $(MRPROPER_FILES))
+mrproper-dirs      := $(addprefix _mrproper_,scripts)
+
+PHONY += $(mrproper-dirs) mrproper archmrproper
+$(mrproper-dirs):
+	$(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
+
+mrproper: clean $(mrproper-dirs)
+	$(call cmd,rmdirs)
+	$(call cmd,rmfiles)
+	@rm -f arch/*/include/asm/arch
+
+# distclean
+#
+PHONY += distclean
+
+distclean: mrproper
+	@find $(srctree) $(RCS_FIND_IGNORE) \
+		\( -name '*.orig' -o -name '*.rej' -o -name '*~' \
+		-o -name '*.bak' -o -name '#*#' -o -name '.*.orig' \
+		-o -name '.*.rej' -o -name '*%' -o -name 'core' \
+		-o -name '*.pyc' \) \
+		-type f -print | xargs rm -f
+	@rm -f boards.cfg
+
+# clean - Delete most, but leave enough to build external modules
+#
+quiet_cmd_rmdirs = $(if $(wildcard $(rm-dirs)),CLEAN   $(wildcard $(rm-dirs)))
+      cmd_rmdirs = rm -rf $(rm-dirs)
+
+quiet_cmd_rmfiles = $(if $(wildcard $(rm-files)),CLEAN   $(wildcard $(rm-files)))
+      cmd_rmfiles = rm -f $(rm-files)
 
 PHONY += FORCE
 FORCE:
