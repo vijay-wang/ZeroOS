@@ -88,3 +88,5 @@ fiq:
 
 
 #endif /* CONFIG_USE_IRQ */
+
+        .section        .note.GNU-stack,"",%progbits

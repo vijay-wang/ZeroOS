@@ -1,7 +1,7 @@
-        .section .start.text
-        .extern kernel_start
-        .code 32
-        .global reset
+        .section        .start.text
+        .extern         kernel_start
+        .code           32
+        .global         reset
 
 reset:
 
@@ -42,3 +42,6 @@ reset:
 
         ldr sp, =__stack_start
         b kernel_start
+
+
+        .section        .note.GNU-stack,"",%progbits  // Mark the stack as non-executable
